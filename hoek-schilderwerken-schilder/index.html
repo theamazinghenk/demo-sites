@@ -153,13 +153,23 @@ p{margin:0}
 /* ---------- header ---------- */
 .top{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
 .top__in{display:flex;align-items:center;gap:12px;min-height:64px}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:750;letter-spacing:-.02em;font-size:1.02rem;min-width:0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:750;letter-spacing:-.02em;font-size:1.02rem;min-width:0;flex:1 1 auto}
+.brand__tekst{display:flex;flex-direction:column;min-width:0}
 .brand__mark{flex:0 0 auto;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:.82rem;font-weight:800;letter-spacing:.02em;background:linear-gradient(145deg,var(--primary),var(--primary-dk))}
-.brand__naam{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* nooit ellipsis in een bedrijfsnaam: liever twee regels dan "Wesley ..." */
+.brand__naam{white-space:normal;overflow-wrap:break-word;line-height:1.15;font-size:clamp(.86rem,3.5vw,1.02rem);text-wrap:balance}
 .top__nav{display:none;margin-left:auto;gap:22px;font-size:.94rem;font-weight:550}
 .top__nav a{text-decoration:none;color:var(--muted)}
 .top__nav a:hover{color:var(--ink)}
-.top__cta{margin-left:auto;display:flex;gap:8px;align-items:center}
+.top__cta{margin-left:auto;display:flex;gap:8px;align-items:center;flex:0 0 auto}
+/* Op smalle schermen krijgen de CTA's alleen hun icoon: de bedrijfsnaam is
+   belangrijker dan het woord "WhatsApp", en zo past hij op twee regels. */
+@media (max-width:520px){
+  .top__cta .btn span{display:none}
+  .top__cta .btn{padding:11px 12px}
+  .top__cta .btn__ico{width:20px;height:20px}
+  .brand__naam{font-size:.9rem}
+}
 @media (min-width:900px){.top__nav{display:flex}.top__cta{margin-left:0}}
 
 /* ---------- buttons ---------- */
@@ -257,7 +267,9 @@ p{margin:0}
 .uren li{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px dashed var(--line)}
 .uren li:last-child{border-bottom:0}
 .uren b{font-weight:600}
-.uren span{color:var(--muted);font-variant-numeric:tabular-nums}
+.uren span{color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto;white-space:nowrap}
+/* gesloten dagen zijn echt gesloten, niet weggelaten */
+.uren .dicht{color:#9aa2ad}
 .noot{margin-top:14px;font-size:.86rem;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding:0;list-style:none}
 .chips li{font-size:.85rem;font-weight:600;color:var(--primary-dk);background:var(--tint);border:1px solid var(--line);padding:6px 11px;border-radius:999px}
@@ -321,7 +333,7 @@ p{margin:0}
   <div class="wrap top__in">
     <a class="brand" href="#top">
       <span class="brand__mark" aria-hidden="true">HS</span>
-      <span class="brand__naam">Hoek Schilderwerken</span>
+      <span class="brand__tekst"><span class="brand__naam">Hoek Schilderwerken</span></span>
     </a>
     <nav class="top__nav" aria-label="Hoofdmenu">
       <a href="#diensten">Diensten</a>
@@ -330,11 +342,11 @@ p{margin:0}
       <a href="#contact">Contact</a>
     </nav>
     <div class="top__cta">
-      <a class="btn btn--ghost btn--sm" href="tel:+31614572245">
+      <a class="btn btn--ghost btn--sm" href="tel:+31614572245" aria-label="Bel Hoek Schilderwerken">
         <svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 006.5 6.5L17 13l4 1.5v3a2 2 0 01-2.2 2A17 17 0 014.5 5.2 2 2 0 016.5 3z"/></svg>
         <span>Bel</span>
       </a>
-      <a class="btn btn--wa btn--sm" href="https://wa.me/31614572245?text=Hallo%20Hoek%20Schilderwerken%2C%20ik%20zag%20jullie%20site.%20Ik%20wil%20graag%20een%20prijsopname%20in%20Katwijk." rel="noopener">
+      <a class="btn btn--wa btn--sm" href="https://wa.me/31614572245?text=Hallo%20Hoek%20Schilderwerken%2C%20ik%20zag%20jullie%20site.%20Ik%20wil%20graag%20een%20prijsopname%20in%20Katwijk." rel="noopener" aria-label="WhatsApp Hoek Schilderwerken">
         <svg class="btn__ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.5-5.9c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.5 6.5 0 01-3.2-2.8c-.1-.2 0-.4.1-.5l.6-.7c.1-.2.1-.3 0-.5l-.7-1.6c-.1-.3-.3-.3-.5-.3h-.5c-.2 0-.5.1-.7.4-.3.3-.9 1-.9 2.2 0 1.3.9 2.5 1 2.7.1.2 1.7 2.7 4.2 3.7 2 .8 2.5.7 2.9.6.5-.1 1.4-.6 1.6-1.2.2-.6.2-1.1.1-1.2 0-.1-.2-.2-.4-.3z"/></svg>
         <span>WhatsApp</span>
       </a>
@@ -486,7 +498,7 @@ p{margin:0}
             <span class="avatar" aria-hidden="true">MJ</span>
             <div>
               <div class="review__naam">M. Jansen</div>
-              <div class="review__plaats">Woonplaats</div>
+              <div class="review__plaats">Katwijk</div>
             </div>
           </div>
           <div class="review__bron">
@@ -508,7 +520,7 @@ p{margin:0}
             <span class="avatar" aria-hidden="true">BT</span>
             <div>
               <div class="review__naam">Bouwbedrijf Tulp</div>
-              <div class="review__plaats">Woonplaats</div>
+              <div class="review__plaats">Katwijk</div>
             </div>
           </div>
           <div class="review__bron">
@@ -530,7 +542,7 @@ p{margin:0}
             <span class="avatar" aria-hidden="true">FH</span>
             <div>
               <div class="review__naam">Fam. Hendriks</div>
-              <div class="review__plaats">Woonplaats</div>
+              <div class="review__plaats">Katwijk</div>
             </div>
           </div>
           <div class="review__bron">
@@ -555,19 +567,19 @@ p{margin:0}
           <h3>Openingstijden</h3>
           <ul class="uren">
             
-            <li><b>Maandag</b><span>07:30 - 17:00</span></li>
+            <li><b>Maandag</b><span class="">07:30 - 17:00</span></li>
             
-            <li><b>Dinsdag</b><span>07:30 - 17:00</span></li>
+            <li><b>Dinsdag</b><span class="">07:30 - 17:00</span></li>
             
-            <li><b>Woensdag</b><span>07:30 - 17:00</span></li>
+            <li><b>Woensdag</b><span class="">07:30 - 17:00</span></li>
             
-            <li><b>Donderdag</b><span>07:30 - 17:00</span></li>
+            <li><b>Donderdag</b><span class="">07:30 - 17:00</span></li>
             
-            <li><b>Vrijdag</b><span>07:30 - 17:00</span></li>
+            <li><b>Vrijdag</b><span class="">07:30 - 17:00</span></li>
             
-            <li><b>Zaterdag</b><span>Op afspraak</span></li>
+            <li><b>Zaterdag</b><span class="">Op afspraak</span></li>
             
-            <li><b>Zondag</b><span>Gesloten</span></li>
+            <li><b>Zondag</b><span class="dicht">Gesloten</span></li>
             
           </ul>
           <p class="noot">Buitenwerk plannen we op droge dagen. Bij twijfel over het weer belt u gewoon even.</p>
